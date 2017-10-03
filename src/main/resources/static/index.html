@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <h1>Todo App
+    <h1>
+</head>
+
+<body>
+  <form>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" name="name" id="title" class="form-control" placeholder="Title">
+  </div>
+  <div class="form-group">
+    <label for="">Complete</label>
+    <input type="text" name="complete" id="com" class="form-control" placeholder="Complete">
+  </div>
+ 
+  <input type="button" class="btn btn-info" id="btnadd" value="Add">
+  <!--<td><button id="btnadd">Add</button></td>-->
+
+ </form>
+  <p id="list"></p>
+  <table>
+    <tr>
+      <td>Id:</td>
+      <td><input type="number" name="id" class="form-control" id="id1"></td>
+    </tr>
+    <tr>
+      <td><button id="btndelete">Delete</button></td>
+      <td><button id="btnedit">Edit</button></td>
+      <td><button id="btnupdate">Update</button></td>
+    </tr>
+  </table>
+ 
+  <script>
+    $("#btnadd").click(function () {
+      $.ajax({
+        type: 'POST',
+        url: "http://localhost:8080/Todos",
+        data: JSON.stringify({
+          "title": document.getElementById("title").value,
+          "complete": document.getElementById("com").value,
+          
+        }),
+        error: function (e) {
+          console.log(e);
+
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
+      alert(empname);
+      clear();
+    });
+
+    function clear() {
+      document.getElementById("title").value = "";
+      document.getElementById("com").value = "";
+    
+    }
+    $("#btndelete").click(function () {
+      var id = document.getElementById("id1").value;
+      $.ajax({
+        type: 'DELETE',
+        url: "http://localhost:8080/Todos/" + id,
+        data: JSON.stringify({
+          //id: document.getElementById("id1").value
+        }),
+        error: function (e) {
+          console.log(e);
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
+      clear();
+    });
+    var id3;
+    var emp = {};
+    $("#btnedit").click(function () {
+      var id2 = document.getElementById("id1").value;
+      id3 = id2;
+      //      alert("jhfg"+id3);
+
+
+      console.log(id3);
+      $.ajax({
+        type: 'GET',
+        contentType: 'json',
+        url: 'http://localhost:8080/Todos/' + id3,
+        dataType: 'json',
+
+        success: function (data) {
+          console.log(data);
+          emp = data;
+          document.getElementById("title").value = emp.title;
+          document.getElementById("com").value = emp.complete;
+        
+          console.log(emp.title);
+        },
+        error: function (e) {
+          console.log("Error");
+        },
+        done: function () {
+          console.log("Data Retrived Successfully");
+        }
+      });
+    });
+    $("#btnupdate").click(function () {
+      //   alert(id3);
+      $.ajax({
+        type: 'PUT',
+        contentType: 'json',
+        url: "http://localhost:8080/Todos/" + id3,
+        data: JSON.stringify({
+          "title": document.getElementById("title").value,
+          "complete": document.getElementById("com").value,
+         
+        }),
+        error: function (e) {
+          console.log(e);
+
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
+      clear();
+
+    });
+  </script>
+</body>
+
+</html>
